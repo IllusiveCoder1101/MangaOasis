@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Reminder</title>
+</head>
+<body>
+    <h1>Hello, {{username}}</h1>
+    <p>
+        Hope you've been enjoying reading , your selected collection of manga . This mail is a reminder to some upcoming expiry dates approaching for some of your manga.
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <th>Book Name</th>
+                <th>Book Author</th>
+                <th>Expiry</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expiry in expire_list %}
+            <tr>
+                <th>{{expiry.book_name}}</th>
+                <th>{{expiry.book_author}}</th>
+                <th>{{expiry.expiry}}</th>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p>Thank you for using our service. Hope you have a great day !</p>
+</body>
+</html>

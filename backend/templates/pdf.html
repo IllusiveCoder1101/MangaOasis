@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Report</title>
+</head>
+<body>
+    <h1>Hello, Admin</h1>
+    <p>This is a monthly report , consisting of book average ratings and books issued alongwith their expiry durations.</p>
+
+    <h2>Average Ratings of Books:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Book Name</th>
+                <th>Book Author</th>
+                <th>Average Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rating in ratings_list %}
+            <tr>
+                <td>{{rating.book_name}}</td>
+                <td>{{rating.book_author}}</td>
+                <td>{{rating.avg_rating}}</td>
+            </tr>
+            {% endfor%}
+        </tbody>
+    </table>
+    
+    <h2>Expiry of Books:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Book Name</th>
+                <th>Book Author</th>
+                <th>Issued By</th>
+                <th>Expiry Duration</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for issued in issued_list %}
+            <tr>
+                <td>{{issued.book_name}}</td>
+                <td>{{issued.book_author}}</td>
+                <td>{{issued.user_name}}</td>
+                <td>{{issued.expiry}}</td>
+            </tr>
+            {% endfor%}
+        </tbody>
+    </table>
+    <p>Thanks for your daily Work. Hope you have a great day ahead!</p>
+</body>
+</html>
