@@ -75,16 +75,6 @@
     pip install -r requirements.txt
     ```
 
-3. Configure environment variables:  
-   Create a `.env` file in the root directory with the following keys:
-
-    ```
-    FLASK_APP=run.py
-    FLASK_ENV=development
-    SECRET_KEY=your_secret_key
-    DATABASE_URL=sqlite:///db.sqlite3
-    REDIS_URL=redis://localhost:6379/0
-    ```
 
 4. Run the Flask backend:
 
