@@ -16,15 +16,12 @@
 
 ## Project Structure
 
-This project contains two backend implementations:
-
 | Directory | Description |
 |---|---|
-| `backend/` | Original backend with Celery workers, Redis caching, and email notifications |
-| `backend_v1/` | Simplified backend — Flask + SQLite + JWT only (no Redis, Celery, or SMTP required) |
+| `backend_v1/` | Flask + SQLite + JWT backend |
 | `frontend_v1/` | Vue.js 3 SPA |
 
-### backend_v1 Architecture
+### Backend Architecture
 
 ```
 backend_v1/
@@ -38,22 +35,15 @@ backend_v1/
     └── mangaOasis.db
 ```
 
-**What was removed from the original backend:**
-- Celery background workers (daily/monthly tasks)
-- Redis caching layer
-- SMTP email sending
-- WeasyPrint PDF report generation
-- HTML email/report templates
-
-**What was improved:**
+### Backend Highlights
 - Structured JSON error responses for all errors (400, 401, 403, 404, 409, 500)
 - Input validation on all POST/PUT endpoints (missing fields return 400 with details)
-- Admin endpoints return 403 instead of silently failing for non-admin users
+- Admin endpoints return 403 for non-admin users
 - Global exception handler with DB session rollback on 500 errors
 - JWT error callbacks (expired, invalid, missing tokens all return JSON)
 - Passwords are hashed using scrypt via `werkzeug.security` (no plaintext storage)
 - Admin credentials stored in a dedicated `admin` table (no hardcoded values)
-- User GET endpoint no longer leaks password hashes in the response
+- User GET endpoint does not expose password hashes
 - Admin registration is protected — only existing admins can register new admins
 
 ---
@@ -68,7 +58,7 @@ backend_v1/
 - **Chart.js** — Admin dashboard graphs
 - **Swiper** — Book carousel
 
-### Backend (v2)
+### Backend
 - **Python 3 / Flask** — Web API framework
 - **SQLite** — Lightweight relational database
 - **Flask-JWT-Extended** — JWT authentication
@@ -85,7 +75,7 @@ backend_v1/
 
 ---
 
-### Backend Setup (v2)
+### Backend Setup
 
 1. Navigate to `backend_v1/` and create a virtual environment:
 
@@ -114,7 +104,7 @@ backend_v1/
 
 ### Frontend Setup
 
-1. Navigate to `frontend/` and install dependencies:
+1. Navigate to `frontend_v1/` and install dependencies:
 
     ```bash
     cd frontend_v1/
