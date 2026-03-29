@@ -86,6 +86,7 @@
     import axios from 'axios';
     import { onMounted, ref } from 'vue';
     import Loader from '@/components/loader.vue';
+    import { API_BASE_URL } from '../config.js'
     import AddChapterModal from '../components/addChapterModal.vue'
     import EditChapterModal from '../components/editChapterModal.vue'
     import EditBookModal from '../components/editBookModal.vue'
@@ -106,7 +107,7 @@
     const edit_book_error=ref({"msg":""})
     const modal_display=ref({"display":false,"message":""})
     const getBookData=async()=>{
-        const path="http://localhost:5001/book"
+        const path=`${API_BASE_URL}/book`
         await axios.get(path,{headers:{Authorization:`Bearer ${localStorage.getItem("access_key")}`}})
             .then((data)=>{
                 book_data.value.message=data.data.msg
@@ -120,13 +121,13 @@
     }
     const getBookCover=(p)=>{
         const pic=p
-        return new URL(`../assets/manga_pics/${pic}`, import.meta.url).href
+        return `${API_BASE_URL}/static/manga_pics/${pic}`
     }
     const getIdBook=(id)=>{
         return book_data.value.result.filter((info)=>info["book_id"] == id)[0]
     }
     const editBook=async(payload,id)=>{
-        const path=`http://localhost:5001/book/${id}`
+        const path=`${API_BASE_URL}/book/${id}`
         await axios.put(path,payload,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
              .then(()=>{
                 getBookData()
@@ -145,7 +146,7 @@
              })
     }
     const editChapter=async(payload,id)=>{
-        const path=`http://localhost:5001/chapter/${id}`
+        const path=`${API_BASE_URL}/chapter/${id}`
         await axios.put(path,payload,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
              .then(()=>{
                 getBookData()
@@ -164,7 +165,7 @@
              })
     }
     const removeBook=(id)=>{
-        const path=`http://localhost:5001/book/${id}`
+        const path=`${API_BASE_URL}/book/${id}`
         axios.delete(path,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
         getBookData()
         modal_display.value.display=true
@@ -175,7 +176,7 @@
                 },2000)
     }
     const removeChapter=(id)=>{
-        const path=`http://localhost:5001/chapter/${id}`
+        const path=`${API_BASE_URL}/chapter/${id}`
         axios.delete(path,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
         getBookData()
         modal_display.value.display=true
@@ -186,7 +187,7 @@
                 },2000)
     }
     const addBook=(payload)=>{
-        const path='http://localhost:5001/book'
+        const path=`${API_BASE_URL}/book`
         axios.post(path,payload,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
              .then(()=>{
                 getBookData()
@@ -205,7 +206,7 @@
              })
     }
     const addChapter=(payload)=>{
-        const path='http://localhost:5001/chapter'
+        const path=`${API_BASE_URL}/chapter`
         axios.post(path,payload,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
             .then(()=>{
                 getBookData()

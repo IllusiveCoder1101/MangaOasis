@@ -53,6 +53,7 @@
     import { onMounted } from 'vue';
     import axios from 'axios'
     import { ref } from 'vue';
+    import { API_BASE_URL } from '../config.js'
     onMounted(()=>{
         window.scrollTo(0,0)
         localStorage.removeItem("access_key")
@@ -78,7 +79,7 @@
         },
         methods:{
             CheckUser(payload){
-                const path="http://localhost:5001/login_user"
+                const path=`${API_BASE_URL}/login_user`
                 axios.post(path,payload)
                     .then((info)=>{
                         console.log(info.data)

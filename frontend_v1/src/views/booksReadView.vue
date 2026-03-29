@@ -39,6 +39,7 @@
     import axios from 'axios';
     import { useRoute } from 'vue-router';
     import Loader from '@/components/loader.vue';
+    import { API_BASE_URL } from '../config.js'
     
     const route=useRoute()
     const book_id=route.params.id
@@ -75,7 +76,7 @@
     })
 
     const get_chapter=()=>{
-        const path='http://localhost:5001/chapter'
+        const path=`${API_BASE_URL}/chapter`
         axios.get(path,{headers: {Authorization:`Bearer ${localStorage.getItem("access_key")}`}})
              .then((info)=>{
                 let tmp=info.data.result
@@ -92,7 +93,7 @@
     }
     
     const buy_status_check=async()=>{
-        const path2="http://localhost:5001/get_status"
+        const path2=`${API_BASE_URL}/get_status`
         await axios.get(path2,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
             .then((info)=>{
                 let tmp=info.data.result.filter((data)=>data["book_id"]==book_id && data['user_id']==user_id && data["status_type"]=="buy")
@@ -104,7 +105,7 @@
         return chapter_data.value.result.filter((info)=>info['chapter_no']==ch_no && info['volume_no']==vol_no)
     }
     const get_page_img=(img)=>{
-        return new URL(`../assets/manga_pics/${img}`, import.meta.url).href
+        return `${API_BASE_URL}/static/manga_pics/${img}`
     }
     const get_chapter_page=(ch_no,vol_no)=>{
         const data=get_chapter_id(ch_no,vol_no)[0]['chapter_pages']

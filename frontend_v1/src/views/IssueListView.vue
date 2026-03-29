@@ -70,6 +70,7 @@
     import { onMounted, ref } from 'vue';
     import axios from 'axios';
     import Loader from '@/components/loader.vue';
+    import { API_BASE_URL } from '../config.js'
     onMounted(()=>{
         window.scrollTo(0,0)
         get_issue()
@@ -78,7 +79,7 @@
     const issue_books_data=ref({"message":"","result":[]})
     const search_result=ref({'result':[]})
     const get_issue=()=>{
-        const path=`http://localhost:5001/get_status`
+        const path=`${API_BASE_URL}/get_status`
         axios.get(path,{headers:{Authorization:`Bearer ${localStorage.getItem("access_key")}`}})
             .then((info)=>{
                 issue_books_data.value.message=info.data.msg
@@ -91,19 +92,19 @@
         search_result.value.result=issue_books_data.value.result.filter((data)=>data['book_name'].toLowerCase().includes(input.toLowerCase()) || data['book_author'].toLowerCase().includes(input.toLowerCase()) )
     }
     const update_issue_accept=(user_id,book_id)=>{
-        const path=`http://localhost:5001/status/accept/${user_id}/${book_id}`
+        const path=`${API_BASE_URL}/status/accept/${user_id}/${book_id}`
         const payload={"user_id":user_id,"book_id":book_id}
         axios.put(path,payload,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
              .then(get_issue())
        
     }
     const update_issue_reject=(user_id,book_id)=>{
-        const path=`http://localhost:5001/status/reject/${user_id}/${book_id}`
+        const path=`${API_BASE_URL}/status/reject/${user_id}/${book_id}`
         axios.delete(path,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
         get_issue()
     }
     const get_book_cover=(pic)=>{
-        return new URL(`../assets/manga_pics/${pic}`, import.meta.url).href
+        return `${API_BASE_URL}/static/manga_pics/${pic}`
     }
 
 </script>

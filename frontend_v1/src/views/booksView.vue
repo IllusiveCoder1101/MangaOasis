@@ -47,6 +47,7 @@
     import { useRoute } from 'vue-router';
     import axios from 'axios';
     import Loader from '@/components/loader.vue';
+    import { API_BASE_URL } from '../config.js'
     onMounted(()=>{
         window.scrollTo(0,0)
         get_book_data()
@@ -58,7 +59,7 @@
     const search_result=ref({result:[]})
     const genres_selected=ref({result:[]})
     const get_book_data=()=>{
-        const path1="http://localhost:5001/book"
+        const path1=`${API_BASE_URL}/book`
         axios.get(path1,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
             .then((info)=>{
                 book_data.value.message=info.data.msg
@@ -89,7 +90,7 @@
         search_result.value.result=book_data.value.result.filter((data)=>data['book_genres'].includes(genres_selected.value.result.toString()))
     }
     const get_book_cover=(pic)=>{
-            return new URL(`../assets/manga_pics/${pic}`, import.meta.url).href
+            return `${API_BASE_URL}/static/manga_pics/${pic}`
     }
 </script>
 

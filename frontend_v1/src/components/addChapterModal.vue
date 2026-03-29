@@ -27,7 +27,7 @@
                 <div class="card_details">
                     <div class="detail_container1">
                         <label for="expiry" class="modal_label">Chapter Pages</label>
-                        <input type="file" name="" id="" ref="file"  class="modal_input" multiple @change="chapter_data['chapter_pages']=read_img()" required>
+                        <input type="file" name="" id="" ref="file"  class="modal_input" multiple @change="async () => { chapter_data['chapter_pages'] = await read_img() }" required>
                     </div>
                     
                 </div>
@@ -60,18 +60,21 @@ import { ref } from 'vue';
 </script>
 
 <script>
+    import axios from 'axios'
+    import { API_BASE_URL } from '../config.js'
     export default {
         props:["close_func","handle_add_chapter","book_id","error"],
         methods:{
-            
-            read_img(){
-                let l=[]
-            
-                for (let i of this.$refs.file.files){
-                    l.push(i.name)
+
+            async read_img(){
+                const formData = new FormData()
+                for (let file of this.$refs.file.files){
+                    formData.append('file', file)
                 }
-                
-                return l.join()
+                const res = await axios.post(`${API_BASE_URL}/upload?folder=manga_pics`, formData, {
+                    headers: { Authorization: `Bearer ${localStorage.getItem("access_key")}`, 'Content-Type': 'multipart/form-data' }
+                })
+                return res.data.filenames.join()
             }
         }
     }

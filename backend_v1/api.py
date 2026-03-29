@@ -1,10 +1,23 @@
+import os
 from flask import request, jsonify
 from main import db, app, tables
+from werkzeug.utils import secure_filename
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from flask_cors import cross_origin
 from flask_restful import Resource
 from error_handler import NotFoundError, DuplicateDataError, ForbiddenError, BadRequestError
 from werkzeug.security import generate_password_hash, check_password_hash
+
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
+UPLOAD_FOLDERS = {
+    'manga_pics': os.path.join(os.path.dirname(__file__), 'static', 'manga_pics'),
+    'images': os.path.join(os.path.dirname(__file__), 'static', 'images'),
+}
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def require_admin():
@@ -447,3 +460,32 @@ class StatusAPI(Resource):
             return jsonify({"msg": "Revoked"}), 200
         else:
             raise BadRequestError(f"Invalid query parameter: {query}")
+
+
+class UploadAPI(Resource):
+    @cross_origin()
+    @jwt_required()
+    def post(self):
+        folder = request.args.get('folder', 'manga_pics')
+        if folder not in UPLOAD_FOLDERS:
+            raise BadRequestError(f"Invalid folder: {folder}. Must be 'manga_pics' or 'images'")
+
+        if 'file' not in request.files:
+            raise BadRequestError("No file provided")
+
+        files = request.files.getlist('file')
+        filenames = []
+
+        for f in files:
+            if f.filename == '':
+                continue
+            if not allowed_file(f.filename):
+                raise BadRequestError(f"File type not allowed: {f.filename}. Allowed: {', '.join(ALLOWED_EXTENSIONS)}")
+            filename = secure_filename(f.filename)
+            f.save(os.path.join(UPLOAD_FOLDERS[folder], filename))
+            filenames.append(filename)
+
+        if not filenames:
+            raise BadRequestError("No valid files uploaded")
+
+        return jsonify({"msg": "Uploaded Successfully", "filenames": filenames}), 201

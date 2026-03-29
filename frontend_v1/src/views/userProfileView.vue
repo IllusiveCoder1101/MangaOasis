@@ -64,6 +64,7 @@
     import { onMounted, ref } from 'vue';
     import { useRoute } from 'vue-router'
     import Loader from '../components/loader.vue';
+    import { API_BASE_URL } from '../config.js'
     onMounted(()=>{
         window.scrollTo(0,0)
         get_user_data()
@@ -74,7 +75,7 @@
     const password_visible=ref({pass:false})
     const new_data=ref({"username":"","email":"","password":"","profile_pic":"","banner":""})
     const get_user_data=async()=>{
-        const path1="http://localhost:5001/user"
+        const path1=`${API_BASE_URL}/user`
         await axios.get(path1,{headers:{Authorization:`Bearer ${localStorage.getItem("access_key")}`}})
             .then((info)=>{
                 let tmp=info.data.result
@@ -83,7 +84,7 @@
         })
     }
     const update_user=()=>{
-        const path1=`http://localhost:5001/user/${user_id}`
+        const path1=`${API_BASE_URL}/user/${user_id}`
         if (new_data.value.email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)){
             const payload=new_data.value
             console.log(payload)
@@ -95,7 +96,7 @@
     }
     const update_banner=(new_banner)=>{
         new_data.value['banner']=new_banner
-        const path1=`http://localhost:5001/user/${user_id}`
+        const path1=`${API_BASE_URL}/user/${user_id}`
         const payload=new_data.value
         axios.put(path1,payload,{headers:{Authorization:`Bearer ${localStorage.getItem("access_key")}`}})
             .then((info)=>{
@@ -104,16 +105,16 @@
             })        
     }
     const remove_user=()=>{
-        const path1=`http://localhost:5001/user/${user_id}`
+        const path1=`${API_BASE_URL}/user/${user_id}`
         axios.delete(path1,{headers:{Authorization:`Bearer ${localStorage.getItem("access_key")}`}})
         
         
     }
     const get_banner=(pic)=>{
-        return new URL(`../assets/images/${pic}`, import.meta.url).href
+        return `${API_BASE_URL}/static/images/${pic}`
     }
     const get_profile_pic=(pic)=>{
-        return new URL(`../assets/images/${pic}`, import.meta.url).href
+        return `${API_BASE_URL}/static/images/${pic}`
     }
     const password_visibility=()=>{
         password_visible.value.pass=!password_visible.value.pass

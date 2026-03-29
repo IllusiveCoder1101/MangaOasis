@@ -133,6 +133,7 @@
     import axios from 'axios'
     import { onMounted, ref } from 'vue';
     import { useRoute } from 'vue-router'
+    import { API_BASE_URL } from '../config.js'
 
     onMounted(()=>{
         window.scrollTo(0,0)
@@ -152,7 +153,7 @@
     const user_data=ref({message:"",result:[]})
 
     const get_book_data=()=>{
-        const path1="http://localhost:5001/book"
+        const path1=`${API_BASE_URL}/book`
         axios.get(path1,{headers:{Authorization:`Bearer ${localStorage.getItem("access_key")}`}})
             .then((info)=>{
                 book_data.value.message=info.data.msg
@@ -160,7 +161,7 @@
         })
     }
     const get_user_data=()=>{
-        const path1="http://localhost:5001/user"
+        const path1=`${API_BASE_URL}/user`
         axios.get(path1,{headers:{Authorization:`Bearer ${localStorage.getItem("access_key")}`}})
             .then((info)=>{
                 let tmp=info.data.result
@@ -169,7 +170,7 @@
         })
     }
     const get_chapter_data=()=>{
-        const path1="http://localhost:5001/chapter"
+        const path1=`${API_BASE_URL}/chapter`
         axios.get(path1,{headers:{Authorization:`Bearer ${localStorage.getItem("access_key")}`}})
             .then((info)=>{
                 chapter_data.value.message=info.data.msg
@@ -180,7 +181,7 @@
         return book_data.value.result.filter((data)=>data["book_id"] ==id)
     }
     const get_status=()=>{
-        const path1="http://localhost:5001/get_status"
+        const path1=`${API_BASE_URL}/get_status`
         
         axios.get(path1,{headers:{Authorization:`Bearer ${localStorage.getItem("access_key")}`}})
             .then((info)=>{
@@ -193,7 +194,7 @@
             })
     }
     const get_watchlist=()=>{
-        const path="http://localhost:5001/watchlist"
+        const path=`${API_BASE_URL}/watchlist`
         axios.get(path,{headers:{Authorization:`Bearer ${localStorage.getItem("access_key")}`}})
              .then((info)=>{
                 watchlist_data.value.message=info.data.msg
@@ -202,15 +203,15 @@
              
     }
     const remove_watchlist=(user_id,book_id)=>{
-        const path=`http://localhost:5001/watchlist/${user_id}/${book_id}`
+        const path=`${API_BASE_URL}/watchlist/${user_id}/${book_id}`
         axios.delete(path,{headers: {Authorization: `Bearer ${localStorage.getItem("access_key")}`}})
         get_watchlist()
     }
     const get_book_cover=(pic)=>{
-        return new URL(`../assets/manga_pics/${pic}`, import.meta.url).href
+        return `${API_BASE_URL}/static/manga_pics/${pic}`
     }
     const get_user_pic=(pic)=>{
-        return new URL(`../assets/images/${pic}`, import.meta.url).href
+        return `${API_BASE_URL}/static/images/${pic}`
     }
     const countdown_timer=(expiry_date,now_time,book_id)=>{
         let hrs=expiry_date.split(":")[0]
@@ -227,7 +228,7 @@
             let new_min=Math.floor((diff%3600000)/60000)
             let new_sec=Math.floor((diff%60000)/1000)
             if(diff>0){
-                const path=`http://localhost:5001/status/expiry/${user_id}/${book_id}`
+                const path=`${API_BASE_URL}/status/expiry/${user_id}/${book_id}`
                 let payload={'expiry':`${new_hrs}:${new_min}:${new_sec}`}
                 axios.put(path,payload,{headers: {Authorization:`Bearer ${localStorage.getItem("access_key")}`}})
                 return_time= `${new_hrs}:${new_min}:${new_sec}`
@@ -237,7 +238,7 @@
                 }
             }
             else{
-                const path=`http://localhost:5001/status/auto_revoke/${user_id}/${book_id}`
+                const path=`${API_BASE_URL}/status/auto_revoke/${user_id}/${book_id}`
                 axios.delete(path,{headers: {Authorization:`Bearer ${localStorage.getItem("access_key")}`}})
                 stop()
                 get_status()

@@ -19,11 +19,12 @@
 </template>
 
 <script>
+    import { API_BASE_URL } from '../config.js'
     export default {
         'props':["book_value","handle_redirect","user_id"],
         methods:{
             get_manga_img(pic){
-                return new URL(`../assets/manga_pics/${pic}`, import.meta.url).href
+                return `${API_BASE_URL}/static/manga_pics/${pic}`
             }
         }
     }

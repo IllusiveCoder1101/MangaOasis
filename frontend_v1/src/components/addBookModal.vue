@@ -35,7 +35,7 @@
                 <div class="card_details">
                     <div class="detail_container1">
                         <label for="expiry" class="modal_label">Book Cover</label>
-                        <input type="file" name="" id="" ref="file" class="modal_input" required @change="book_data['book_cover']=read_img()">
+                        <input type="file" name="" id="" ref="file" class="modal_input" required @change="async () => { book_data['book_cover'] = await read_img() }">
                     </div>
                     <div class="detail_container">
                         <label for="expiry" class="modal_label">Price</label>
@@ -72,12 +72,20 @@
 </script>
 
 <script>
+    import axios from 'axios'
+    import { API_BASE_URL } from '../config.js'
     export default {
         props:["close_func","handle_add_book","error"],
-        
+
         methods:{
-            read_img(){
-                return this.$refs.file.files[0].name
+            async read_img(){
+                const file = this.$refs.file.files[0]
+                const formData = new FormData()
+                formData.append('file', file)
+                const res = await axios.post(`${API_BASE_URL}/upload?folder=manga_pics`, formData, {
+                    headers: { Authorization: `Bearer ${localStorage.getItem("access_key")}`, 'Content-Type': 'multipart/form-data' }
+                })
+                return res.data.filenames[0]
             }
         }
     }

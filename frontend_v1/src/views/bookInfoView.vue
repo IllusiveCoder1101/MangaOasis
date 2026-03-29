@@ -90,6 +90,7 @@
     import axios from 'axios';
     import Loader from '@/components/loader.vue';
     import EditFeedbackModal from '../components/editFeedbackModal.vue'
+    import { API_BASE_URL } from '../config.js'
     const route=useRoute()
     const book_id=route.params.id
     const user_id=route.params.id1
@@ -110,7 +111,7 @@
     const buy_status_check=ref({pass:false})
     const request_status_check=ref({pass:false,pass1:false})
     const get_book_data=()=>{
-        const path1="http://localhost:5001/book"
+        const path1=`${API_BASE_URL}/book`
         axios.get(path1,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
             .then((info)=>{
                 book_data.value.message=info.data.msg
@@ -123,14 +124,14 @@
     }
     
     const check_watchlist=()=>{
-        const path='http://localhost:5001/watchlist'
+        const path=`${API_BASE_URL}/watchlist`
         axios.get(path,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
              .then((info)=>{
                 watchlist_check.value.pass=(info.data.result).filter((data)=>data['book_id']==book_id && data['user_id']==user_id).length>0
              })
     }
     const check_request_status=()=>{
-        const path='http://localhost:5001/get_status'
+        const path=`${API_BASE_URL}/get_status`
         axios.get(path,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
              .then((info)=>{
                 let tmp=info.data.result
@@ -139,7 +140,7 @@
             })
     }
     const check_status=()=>{
-        const path='http://localhost:5001/get_status'
+        const path=`${API_BASE_URL}/get_status`
         axios.get(path,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
              .then((info)=>{
                 let tmp=info.data.result
@@ -147,7 +148,7 @@
              })
     }
     const check_buy_status=()=>{
-        const path='http://localhost:5001/get_status'
+        const path=`${API_BASE_URL}/get_status`
         axios.get(path,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
              .then((info)=>{
                 let tmp=info.data.result
@@ -157,15 +158,15 @@
     }
     
     const get_book_cover=(pic)=>{
-            return new URL(`../assets/manga_pics/${pic}`, import.meta.url).href
+            return `${API_BASE_URL}/static/manga_pics/${pic}`
     }
-    
+
     const get_user_pic=(pic)=>{
-            return new URL(`../assets/images/${pic}`, import.meta.url).href
+            return `${API_BASE_URL}/static/images/${pic}`
     }
     
     const get_feedbacks=()=>{
-        const path="http://localhost:5001/feedback"
+        const path=`${API_BASE_URL}/feedback`
         axios.get(path,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
              .then((info)=>{
                 feedback_data.value.message=info.data.msg
@@ -176,19 +177,19 @@
         return feedback_data.value.result.filter((info)=>info['feedback_id']==feedback_id)[0]
     }
     const edit_feedback=(feedback_id,payload)=>{
-        const path=`http://localhost:5001/feedback/${feedback_id}`
+        const path=`${API_BASE_URL}/feedback/${feedback_id}`
         axios.put(path,payload,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
         get_feedbacks()
         
     }
     const remove_feedback=(feedback_id)=>{
-        const path=`http://localhost:5001/feedback/${feedback_id}`
+        const path=`${API_BASE_URL}/feedback/${feedback_id}`
         axios.delete(path,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
         get_feedbacks()
 
     }
     const get_user=()=>{
-        const path='http://localhost:5001/user'
+        const path=`${API_BASE_URL}/user`
         axios.get(path,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
              .then((info)=>{
                 user_data.value.message=info.data.msg
@@ -202,21 +203,21 @@
     
     const add_to_watchlist=()=>{
         if (!watchlist_check.value.pass){
-            const path='http://localhost:5001/watchlist'
+            const path=`${API_BASE_URL}/watchlist`
             const payload={"user_id":user_id,"book_id":book_id}
             axios.post(path,payload,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
             check_watchlist()
         }
     }
     const pay_book=(price)=>{
-        const path='http://localhost:5001/status/buy'
+        const path=`${API_BASE_URL}/status/buy`
         const payload={"user_id":user_id,"book_id":book_id,"price":price}
         axios.post(path,payload,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
         check_buy_status()
     }
     const request_book=(hrs,mins,sec)=>{
         if(hrs!==0 || mins!==0 || sec!==0){
-            const path='http://localhost:5001/status/request'
+            const path=`${API_BASE_URL}/status/request`
             const payload={"user_id":user_id,"book_id":book_id,'expiry':`${hrs}:${mins}:${sec}`}
             console.log(payload)
             axios.post(path,payload,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
@@ -225,7 +226,7 @@
         
     }
     const post_feedback=async(msg,score)=>{
-        const path='http://localhost:5001/feedback'
+        const path=`${API_BASE_URL}/feedback`
         const payload={"user_id":user_id,"book_id":book_id,"feedback_message":msg,"feedback_score":score}
         await axios.post(path,payload,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
         get_feedbacks()

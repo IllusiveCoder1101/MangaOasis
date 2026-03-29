@@ -59,6 +59,7 @@
     import axios from 'axios';
     import { onMounted ,ref} from 'vue';
     import Loader from '@/components/loader.vue';
+    import { API_BASE_URL } from '../config.js'
     import IssueByBooksModal from '../components/issueByBooksModal.vue'
     import BooksPurchasedModal from '../components/booksPurchasedModal.vue'
     import FeedbacksModal from '../components/feedbacksModal.vue'
@@ -74,7 +75,7 @@
     const user_data=ref({message:"",result:[]})
     const search_result=ref({'result':[]})
     const getBookData=()=>{
-        const path="http://localhost:5001/book"
+        const path=`${API_BASE_URL}/book`
         axios.get(path,{headers:{Authorization:`Bearer ${localStorage.getItem("access_key")}`}})
              .then((data)=>{
                 book_data.value.message=data.data.msg
@@ -84,7 +85,7 @@
     }
     
     const getData = async()=>{
-        const path=`http://localhost:5001/user`
+        const path=`${API_BASE_URL}/user`
         await axios.get(path,{headers:{Authorization:`Bearer ${localStorage.getItem("access_key")}`}})
              .then((data)=>{
                 user_data.value.message=data.data.msg
@@ -97,7 +98,7 @@
         search_result.value.result=user_data.value.result.filter((data)=>data['user_name'].toLowerCase().includes(input.toLowerCase()) || data['email'].toLowerCase().includes(input.toLowerCase()))
     }
     const removeUser=async(id)=>{
-        const path=`http://localhost:5001/user/${id}`
+        const path=`${API_BASE_URL}/user/${id}`
         await axios.delete(path,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
         getData()
     }
@@ -106,10 +107,10 @@
     }
     const getBookCover=(id)=>{
         const pic=getIdBook(id)[0]["book_cover"]
-        return new URL(`../assets/manga_pics/${pic}`, import.meta.url).href
+        return `${API_BASE_URL}/static/manga_pics/${pic}`
     }
     const getImg=(pic)=>{
-        return new URL(`../assets/images/${pic}`, import.meta.url).href
+        return `${API_BASE_URL}/static/images/${pic}`
     }
     
     

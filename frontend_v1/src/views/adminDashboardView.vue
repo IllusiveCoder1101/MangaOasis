@@ -149,6 +149,7 @@
     import PageFooter from '../components/pageFooter.vue'
     import axios from 'axios'
     import { onMounted,ref } from 'vue';
+    import { API_BASE_URL } from '../config.js'
     import Loader from '@/components/loader.vue';
     import {
     Chart as ChartJS,
@@ -180,21 +181,21 @@
     const graph_info=ref({data:{labels: [],datasets: [{ label:"",data: [] }]},options: {responsive: true}})
     const total_sales=ref({"res":0})
     const getData=async()=>{
-        const path=`http://localhost:5001/user`
+        const path=`${API_BASE_URL}/user`
         await axios.get(path,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
             .then((info)=>{
                 user_data.value.message=info.data.msg
                 user_data.value.result=info.data.result
         })
 
-        const path1="http://localhost:5001/book"
+        const path1=`${API_BASE_URL}/book`
         await axios.get(path1,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
             .then((info)=>{
                 book_data.value.message=info.data.msg
                 book_data.value.result=info.data.result
         })
 
-        const path2="http://localhost:5001/get_status"
+        const path2=`${API_BASE_URL}/get_status`
         await axios.get(path2,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
             .then((info)=>{
                 request_book_data.value.message=info.data.msg
@@ -207,7 +208,7 @@
                 }
             })
 
-        const path3="http://localhost:5001/feedback"
+        const path3=`${API_BASE_URL}/feedback`
         await axios.get(path3,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
             .then((info)=>{
                 feedback_data.value.message=info.data.msg
@@ -240,10 +241,10 @@
         graph_info.value.data.datasets[0].label="Average Book Ratings"
     }
     const getimg=(pic)=>{
-        return new URL(`../assets/images/${pic}`, import.meta.url).href
-    }   
+        return `${API_BASE_URL}/static/images/${pic}`
+    }
     const getBookImg=(pic)=>{
-        return new URL(`../assets/manga_pics/${pic}`, import.meta.url).href
+        return `${API_BASE_URL}/static/manga_pics/${pic}`
     }    
     const getBookName=(id)=>{
         return book_data.value.result.filter((data)=>data["book_id"]==id)[0]["book_name"]

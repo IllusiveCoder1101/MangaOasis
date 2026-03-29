@@ -74,6 +74,7 @@
     import { onMounted, ref } from 'vue';
     import axios from 'axios';
     import Loader from '@/components/loader.vue';
+    import { API_BASE_URL } from '../config.js'
     onMounted(()=>{
         window.scrollTo(0,0)
         get_issued()
@@ -82,7 +83,7 @@
     const issued_books_data=ref({"message":"","result":[]})
     const search_result=ref({'result':[]})
     const get_issued=()=>{
-        const path=`http://localhost:5001/get_status`
+        const path=`${API_BASE_URL}/get_status`
         axios.get(path,{headers:{Authorization:`Bearer ${localStorage.getItem("access_key")}`}})
             .then((info)=>{
                 issued_books_data.value.message=info.data.msg
@@ -94,15 +95,15 @@
         search_result.value.result=issued_books_data.value.result.filter((data)=>data['book_name'].toLowerCase().includes(input.toLowerCase()) || data['book_author'].toLowerCase().includes(input.toLowerCase()) )
     }
     const revoke=(user_id,book_id)=>{
-        const path=`http://localhost:5001/status/revoke/${user_id}/${book_id}`
+        const path=`${API_BASE_URL}/status/revoke/${user_id}/${book_id}`
         axios.delete(path,{headers:{"Authorization":`Bearer ${localStorage.getItem("access_key")}`}})
         get_issued()
     }
     const get_book_cover=(pic)=>{
-        return new URL(`../assets/manga_pics/${pic}`, import.meta.url).href
+        return `${API_BASE_URL}/static/manga_pics/${pic}`
     }
     const getImg=(pic)=>{
-        return new URL(`../assets/images/${pic}`, import.meta.url).href
+        return `${API_BASE_URL}/static/images/${pic}`
     }
     const export_csv=()=>{
        

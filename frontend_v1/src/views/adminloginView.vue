@@ -51,6 +51,7 @@
     import { onMounted } from 'vue';
     import axios from "axios"
     import { ref } from 'vue';
+    import { API_BASE_URL } from '../config.js'
     onMounted(()=>{
         window.scrollTo(0,0)
         localStorage.removeItem("access_key")
@@ -74,7 +75,7 @@
         },
         methods:{
             CheckUser(payload){
-                const path="http://localhost:5001/login_admin"
+                const path=`${API_BASE_URL}/login_admin`
                 axios.post(path,payload)
                     .then((info)=>{
                         if (info.data.msg === "valid admin"){

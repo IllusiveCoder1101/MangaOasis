@@ -1,3 +1,6 @@
 backend/
 .claude/
 database/
+static/
+manga_pics/
+*.zip

@@ -31,7 +31,7 @@ import tables
 with app.app_context():
     db.create_all()
 
-from api import UserAPI, UserLoginAPI, UserRegisterAPI, AdminLoginAPI, AdminRegisterAPI, BookAPI, FeedbackAPI, WatchlistAPI, StatusAPI, ChapterAPI
+from api import UserAPI, UserLoginAPI, UserRegisterAPI, AdminLoginAPI, AdminRegisterAPI, BookAPI, FeedbackAPI, WatchlistAPI, StatusAPI, ChapterAPI, UploadAPI
 
 api = Api(app)
 api.add_resource(UserAPI, "/user", "/user/<user_id>")
@@ -44,3 +44,4 @@ api.add_resource(FeedbackAPI, "/feedback", "/feedback/<feedback_id>")
 api.add_resource(WatchlistAPI, "/watchlist", "/watchlist/<user_id>/<book_id>")
 api.add_resource(StatusAPI, "/get_status", "/status/<query>", "/status/<query>/<user_id>/<book_id>")
 api.add_resource(ChapterAPI, "/chapter", "/chapter/<chapter_id>")
+api.add_resource(UploadAPI, "/upload")
